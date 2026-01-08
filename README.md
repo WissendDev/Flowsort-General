@@ -1,10 +1,11 @@
 <p align="center">
-  <h1 align="center">🌊 FlowSort</h1>
-  <p align="center">
-    <img src="https://img.shields.io/badge/OS-Windows-blue?style=for-the-badge&logo=windows" alt="OS Windows">
-    <img src="https://img.shields.io/badge/Language-Python-yellow?style=for-the-badge&logo=python" alt="Python">
-    <img src="https://img.shields.io/badge/License-GPL--3.0-red?style=for-the-badge" alt="License GPL-3.0">
-  </p>
+  <img src="https://capsule-render.vercel.app/render?type=waving&color=auto&height=200&section=header&text=FlowSort&fontSize=90&animation=fadeIn&fontAlignY=38" alt="FlowSort Banner">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/OS-Windows-blue?style=flat-square&logo=windows" alt="OS Windows">
+  <img src="https://img.shields.io/badge/Language-Python-yellow?style=flat-square&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/License-GPL--3.0-red?style=flat-square" alt="License GPL-3.0">
 </p>
 
 ---
