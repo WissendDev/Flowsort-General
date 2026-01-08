@@ -1,12 +1,26 @@
 import os
 import sys
+import ctypes
 import tkinter as tk
 import pathlib
 import shutil
 from datetime import datetime
 
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
 class FlowSortCore:
     def __init__(self):
+        if not is_admin():
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+            sys.exit()
+
+        self.base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        self.icon_path = os.path.join(self.base_path, "icon.ico")
+
         if len(sys.argv) < 2:
             self.show_instruction_toast()
         else:
@@ -23,9 +37,8 @@ class FlowSortCore:
         root.attributes("-topmost", True)
         root.configure(bg="white", highlightbackground="#e0e0e0", highlightthickness=1)
         
-        icon_path = r"C:\Users\Aviora\Desktop\FlowSort\icon.ico"
-        if os.path.exists(icon_path):
-            root.iconbitmap(icon_path)
+        if os.path.exists(self.icon_path):
+            root.iconbitmap(self.icon_path)
             
         w, h = 260, 130
         sw, sh = root.winfo_screenwidth(), root.winfo_screenheight()
@@ -47,28 +60,31 @@ class FlowSortCore:
         root.mainloop()
 
     def execute_sorting(self, mode, path):
-        os.chdir(path)
-        files = [f for f in os.listdir() if os.path.isfile(f) and f != "flowsort_core.exe"]
-        if mode == "az":
-            files.sort(key=str.lower)
-            self.rename_files(files)
-        elif mode == "za":
-            files.sort(key=str.lower, reverse=True)
-            self.rename_files(files)
-        elif mode == "size_up":
-            files.sort(key=os.path.getsize)
-            self.rename_files(files)
-        elif mode == "size_down":
-            files.sort(key=os.path.getsize, reverse=True)
-            self.rename_files(files)
-        elif mode == "time_new":
-            files.sort(key=os.path.getmtime, reverse=True)
-            self.rename_files(files)
-        elif mode == "time_old":
-            files.sort(key=os.path.getmtime)
-            self.rename_files(files)
-        elif mode == "smart":
-            self.smart_category_sort(files)
+        try:
+            os.chdir(path)
+            files = [f for f in os.listdir() if os.path.isfile(f) and f != "flowsort_core.exe"]
+            if mode == "az":
+                files.sort(key=str.lower)
+                self.rename_files(files)
+            elif mode == "za":
+                files.sort(key=str.lower, reverse=True)
+                self.rename_files(files)
+            elif mode == "size_up":
+                files.sort(key=os.path.getsize)
+                self.rename_files(files)
+            elif mode == "size_down":
+                files.sort(key=os.path.getsize, reverse=True)
+                self.rename_files(files)
+            elif mode == "time_new":
+                files.sort(key=os.path.getmtime, reverse=True)
+                self.rename_files(files)
+            elif mode == "time_old":
+                files.sort(key=os.path.getmtime)
+                self.rename_files(files)
+            elif mode == "smart":
+                self.smart_category_sort(files)
+        except:
+            pass
 
     def rename_files(self, files):
         for i, f in enumerate(files, 1):
@@ -94,7 +110,9 @@ class FlowSortCore:
                 if ext in extensions:
                     target = folder
                     break
-            if not os.path.exists(target): os.makedirs(target)
+            if not os.path.exists(target):
+                try: os.makedirs(target)
+                except: pass
             dest = os.path.join(target, f)
             if os.path.exists(dest):
                 dest = os.path.join(target, f"{datetime.now().second}_{f}")

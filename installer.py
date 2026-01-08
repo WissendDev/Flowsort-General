@@ -18,18 +18,15 @@ class FlowSortInstaller:
         self.root.attributes("-topmost", True)
         self.root.configure(bg="white", highlightbackground="#f44336", highlightthickness=1)
         
-        self.icon_path = r"C:\Users\Aviora\Desktop\FlowSort\icon.ico"
-        if os.path.exists(self.icon_path): self.root.iconbitmap(self.icon_path)
-
         w, h = 420, 280
         sw, sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
         self.root.geometry(f"{w}x{h}+{(sw-w)//2}+{(sh-h)//2}")
 
-        self.url_core = "https://www.dropbox.com/scl/fi/kph0cqr7skgx69aa7jxaf/flowsort_core.exe?rlkey=pk5dnmhkuywdkkpu669cbapai&st=ekqix95j&dl=1"
-        self.url_uninst = "https://www.dropbox.com/scl/fi/8aarp3p4qdc4ap1bbuv8a/uninstaller.exe?rlkey=ndf010vzkljyubch11etfb8pw&st=w64p00ja&dl=1"
+        self.url_core = "https://www.dropbox.com/scl/fi/4t1nee0msmxyn03owwqjh/flowsort_core.exe?rlkey=qyrcbr7srqsb6v2ei6e9nm1q1&dl=1"
+        self.url_uninst = "https://www.dropbox.com/scl/fi/8aarp3p4dc4ap1bbuv8a/uninstaller.exe?rlkey=ndf010vzkljyubch11etfb8pw&st=r6vmn1ec&dl=1"
+        self.url_icon = "https://www.dropbox.com/scl/fi/3pfwngue5ilx3vwfz86l3/icon.ico?rlkey=p84re0m87bo8mryqmv3dfyxns&dl=1"
 
         self.install_dir = tk.StringVar(value=os.path.join(os.environ['PROGRAMFILES'], "FlowSort"))
-        self.temp_dir = os.path.join(os.environ['TEMP'], "FlowTemp")
 
         tk.Label(self.root, text="Установка FlowSort", fg="#f44336", bg="white", font=("Segoe UI", 13, "bold")).pack(pady=(15, 5), anchor="w", padx=25)
         tk.Label(self.root, text="Выберите папку для установки:", fg="#666666", bg="white", font=("Segoe UI", 9)).pack(anchor="w", padx=25)
@@ -63,38 +60,47 @@ class FlowSortInstaller:
         self.progress.pack(pady=(5, 0), padx=25)
         Thread(target=self.logic, daemon=True).start()
 
-    def download_file(self, url, dest):
-        response = requests.get(url, stream=True)
-        with open(dest, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk: f.write(chunk)
+    def download(self, url, dest):
+        r = requests.get(url, timeout=60)
+        r.raise_for_status()
+        with open(dest, 'wb') as f:
+            f.write(r.content)
 
     def logic(self):
         try:
             target = self.install_dir.get()
-            if not os.path.exists(target): os.makedirs(target)
-            if not os.path.exists(self.temp_dir): os.makedirs(self.temp_dir)
-            self.status.config(text="Загрузка Core...")
-            self.download_file(self.url_core, os.path.join(target, "flowsort_core.exe"))
-            self.download_file(self.url_core, os.path.join(self.temp_dir, "flowsort_core.exe"))
-            self.progress['value'] = 50
-            self.status.config(text="Загрузка Uninstaller...")
-            self.download_file(self.url_uninst, os.path.join(target, "uninstaller.exe"))
-            self.progress['value'] = 80
-            self.reg(os.path.join(target, "flowsort_core.exe"))
+            if not os.path.exists(target): os.makedirs(target, exist_ok=True)
+            
+            self.status.config(text="Загрузка основного файла...")
+            core_p = os.path.join(target, "flowsort_core.exe")
+            self.download(self.url_core, core_p)
+            self.progress['value'] = 35
+            
+            self.status.config(text="Загрузка иконки...")
+            icon_p = os.path.join(target, "icon.ico")
+            self.download(self.url_icon, icon_p)
+            self.progress['value'] = 60
+            
+            self.status.config(text="Загрузка деинсталлятора...")
+            self.download(self.url_uninst, os.path.join(target, "uninstaller.exe"))
+            self.progress['value'] = 85
+            
+            self.reg(core_p, icon_p)
             self.progress['value'] = 100
-            self.status.config(text="Установка завершена успешно!", fg="#4CAF50")
+            self.status.config(text="Установка завершена!", fg="#4CAF50")
+            
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", core_p, None, None, 1)
             self.ins_btn.config(text="Готово", state="normal", command=sys.exit)
         except Exception as e:
             self.status.config(text=f"Ошибка: {str(e)}", fg="red")
             self.ins_btn.config(state="normal")
 
-    def reg(self, exe_path):
+    def reg(self, exe_path, icon_path):
         base = r"Directory\Background\shell\FlowSort"
         with winreg.CreateKey(winreg.HKEY_CLASSES_ROOT, base) as k:
             winreg.SetValueEx(k, "MUIVerb", 0, winreg.REG_SZ, "FlowSort")
             winreg.SetValueEx(k, "SubCommands", 0, winreg.REG_SZ, "")
-            winreg.SetValueEx(k, "Icon", 0, winreg.REG_SZ, self.icon_path if os.path.exists(self.icon_path) else "imageres.dll,80")
+            winreg.SetValueEx(k, "Icon", 0, winreg.REG_SZ, icon_path)
         sub = base + r"\shell"
         items = {"01": ("Name (A-Z)", "az"), "02": ("Name (Z-A)", "za"), "03": ("Size (Min)", "size_up"), "04": ("Size (Max)", "size_down"), "05": ("Newest", "time_new"), "06": ("Oldest", "time_old"), "07": ("Smart Sort", "smart")}
         for k, (l, m) in items.items():
