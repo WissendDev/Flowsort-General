@@ -1,11 +1,13 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/render?type=waving&color=auto&height=200&section=header&text=FlowSort&fontSize=90&animation=fadeIn&fontAlignY=38" alt="FlowSort Banner">
+  <a href="https://github.com/WissendDev/FlowSort">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=50&pause=1000&color=F44336&center=true&vCenter=true&width=600&height=120&lines=🌊+FlowSort;Instant+Order;Smart+Sorting" alt="Typing SVG" />
+  </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/OS-Windows-blue?style=flat-square&logo=windows" alt="OS Windows">
-  <img src="https://img.shields.io/badge/Language-Python-yellow?style=flat-square&logo=python" alt="Python">
-  <img src="https://img.shields.io/badge/License-GPL--3.0-red?style=flat-square" alt="License GPL-3.0">
+  <img src="https://img.shields.io/badge/OS-Windows-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/Language-Python-FFD43B?style=flat-square&logo=python&logoColor=blue" alt="Python">
+  <img src="https://img.shields.io/badge/License-GPLv3-red?style=flat-square" alt="GPLv3">
 </p>
 
 ---
@@ -20,11 +22,6 @@
 * 🛡️ **Standalone:** No Python installation required on the target PC.
 * 🗑️ **Clean Removal:** Includes a dedicated uninstaller.
 
-#### 📥 Installation
-1. Download the latest `installer.exe`.
-2. Run it as **Administrator**.
-3. Choose your installation path and click **Install**.
-
 > 🛠 **For developers:** To see how to build this project, please refer to [Assembly-in-exe.md](./Assembly-in-exe.md).
 
 ---
@@ -38,11 +35,6 @@
 * 🔢 **Быстрое упорядочивание:** Сортировка по имени, размеру или дате с нумерацией.
 * 🛡️ **Автономность:** Не требует установленного Python.
 * 🗑️ **Чистая работа:** Полное удаление всех следов из системы.
-
-#### 📥 Установка
-1. Скачайте последнюю версию `installer.exe`.
-2. Запустите файл от имени **Администратора**.
-3. Выберите путь и нажмите **Установить**.
 
 ---
 <p align="center">
