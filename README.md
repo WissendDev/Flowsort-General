@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="https://github.com/WissendDev/FlowSort">
-    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=50&pause=1000&color=F44336&center=true&vCenter=true&width=600&height=120&lines=🌊+FlowSort;Instant+Order;Smart+Sorting" alt="Typing SVG" />
-  </a>
+  <img src="https://readme-typing-svg.herokuapp.com?font=Inter&weight=700&size=60&duration=3000&pause=1000&color=FFFFFF&center=true&vCenter=true&width=600&height=120&lines=FLOWSORT;INSTANT+ORDER" alt="FlowSort Banner" />
 </p>
 
 <p align="center">
